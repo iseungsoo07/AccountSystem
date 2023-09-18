@@ -47,15 +47,10 @@ class AccountServiceTest {
         given(accountUserRepository.findById(anyLong()))
                 .willReturn((Optional.of(user)));
 
-        given(accountRepository.findFirstByOrderByIdDesc())
-                .willReturn(Optional.of(Account.builder()
-                        .accountNumber("1000000011")
-                        .build()));
-
         given(accountRepository.save(any()))
                 .willReturn(Account.builder()
                         .accountUser(user)
-                        .accountNumber("1000000012")
+                        .accountNumber("5432167890")
                         .accountStatus(IN_USE)
                         .build());
 
@@ -67,42 +62,15 @@ class AccountServiceTest {
         // then
         verify(accountRepository, times(1)).save(captor.capture());
         assertEquals(12L, accountDto.getUserId());
-        assertEquals("1000000012", captor.getValue().getAccountNumber());
+        assertEquals(10, captor.getValue().getAccountNumber().length());
         assertEquals(IN_USE, captor.getValue().getAccountStatus());
     }
 
     private static AccountUser getAccountUser() {
-        AccountUser user = AccountUser.builder()
+        return AccountUser.builder()
                 .id(12L)
-                .name("김아무개")
+                .name("apple")
                 .build();
-        return user;
-    }
-
-    @Test
-    void createAccount_FirstAccount() throws Exception {
-        // given
-        given(accountUserRepository.findById(anyLong()))
-                .willReturn((Optional.of(getAccountUser())));
-
-        given(accountRepository.findFirstByOrderByIdDesc())
-                .willReturn(Optional.empty());
-
-        given(accountRepository.save(any()))
-                .willReturn(Account.builder()
-                        .accountUser(getAccountUser())
-                        .accountNumber("100000000")
-                        .build());
-
-        ArgumentCaptor<Account> captor = ArgumentCaptor.forClass(Account.class);
-
-        // when
-        AccountDto accountDto = accountService.createAccount(1L, 1000L);
-
-        // then
-        verify(accountRepository, times(1)).save(captor.capture());
-        assertEquals(12L, accountDto.getUserId());
-        assertEquals("1000000000", accountDto.getAccountNumber());
     }
 
     @Test
@@ -203,7 +171,7 @@ class AccountServiceTest {
         given(accountRepository.findByAccountNumber(anyString()))
                 .willReturn(Optional.of(Account.builder()
                         .accountUser(AccountUser.builder()
-                                .id(2L).name("이아무개").build())
+                                .id(2L).name("banana").build())
                         .balance(0L)
                         .accountNumber("1000000000")
                         .build()));
@@ -235,6 +203,7 @@ class AccountServiceTest {
         // then
         assertEquals(ACCOUNT_ALREADY_UNREGISTERED, exception.getErrorCode());
     }
+
     @Test
     @DisplayName("계좌에 잔액이 존재하는 경우 - 계좌 해지 실패")
     void deleteAccount_AccountBalanceIsNotEmpty() throws Exception {

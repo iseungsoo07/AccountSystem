@@ -7,11 +7,16 @@ import com.zerobase.myaccount.exception.AccountException;
 import com.zerobase.myaccount.repository.AccountRepository;
 import com.zerobase.myaccount.repository.AccountUserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
+import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.zerobase.myaccount.type.AccountStatus.IN_USE;
 import static com.zerobase.myaccount.type.AccountStatus.UNREGISTERED;
@@ -19,6 +24,7 @@ import static com.zerobase.myaccount.type.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 public class AccountService {
 
@@ -30,18 +36,33 @@ public class AccountService {
 
         validateCreateAccount(accountUser);
 
-        String newAccountNumber = accountRepository.findFirstByOrderByIdDesc()
-                .map(account -> Integer.parseInt(account.getAccountNumber()) + 1 + "")
-                .orElse("1000000000");
+        // String newAccountNumber = accountRepository.findFirstByOrderByIdDesc()
+        //         .map(account -> Integer.parseInt(account.getAccountNumber()) + 1 + "")
+        //         .orElse("1000000000");
 
         return AccountDto.fromEntity(accountRepository.save(Account.builder()
                 .accountUser(accountUser)
-                .accountNumber(newAccountNumber)
+                .accountNumber(createNewAccountNumber())
                 .accountStatus(IN_USE)
                 .balance(initBalance)
                 .registeredAt(LocalDateTime.now())
                 .build()));
+    }
 
+    private String createNewAccountNumber() {
+        List<Account> accountList = accountRepository.findAll();
+        Set<String> accountNumberSet = accountList.stream().map(Account::getAccountNumber).collect(Collectors.toSet());
+
+        Random random = new Random();
+
+        while (true) {
+            long randomNumber = random.nextLong(9999999999L) + 1;
+            String newAccountNumber = String.format("%010d", randomNumber);
+
+            if (accountNumberSet.add(newAccountNumber)) {
+                return newAccountNumber;
+            }
+        }
     }
 
     private void validateCreateAccount(AccountUser accountUser) {

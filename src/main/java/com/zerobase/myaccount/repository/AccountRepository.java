@@ -5,13 +5,16 @@ import com.zerobase.myaccount.domain.AccountUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
     Integer countByAccountUser(AccountUser accountUser);
 
     Optional<Account> findFirstByOrderByIdDesc();
+
 
     Optional<Account> findByAccountNumber(String accountNumber);
 }
