@@ -84,7 +84,7 @@ class AccountControllerTest {
     }
 
     @Test
-    void getAccountListByUserId() throws Exception {
+    void successGetAccountListByUserId() throws Exception {
         // given
         given(accountService.getAccountListByUserId(anyLong()))
                 .willReturn(Arrays.asList(AccountDto.builder()

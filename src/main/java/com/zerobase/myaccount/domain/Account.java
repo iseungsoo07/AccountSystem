@@ -1,6 +1,8 @@
 package com.zerobase.myaccount.domain;
 
+import com.zerobase.myaccount.exception.AccountException;
 import com.zerobase.myaccount.type.AccountStatus;
+import com.zerobase.myaccount.type.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,5 +48,13 @@ public class Account {
     public void deleteAccount(AccountStatus accountStatus, LocalDateTime unRegisteredAt) {
         this.accountStatus = accountStatus;
         this.unRegisteredAt = unRegisteredAt;
+    }
+
+    public void useBalance(Long amount) {
+        if (amount > balance) {
+            throw new AccountException(ErrorCode.AMOUNT_EXCEED_BALANCE);
+        }
+
+        balance -= amount;
     }
 }
