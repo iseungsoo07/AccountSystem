@@ -36,10 +36,6 @@ public class AccountService {
 
         validateCreateAccount(accountUser);
 
-        // String newAccountNumber = accountRepository.findFirstByOrderByIdDesc()
-        //         .map(account -> Integer.parseInt(account.getAccountNumber()) + 1 + "")
-        //         .orElse("1000000000");
-
         return AccountDto.fromEntity(accountRepository.save(Account.builder()
                 .accountUser(accountUser)
                 .accountNumber(createNewAccountNumber())
@@ -54,15 +50,14 @@ public class AccountService {
         Set<String> accountNumberSet = accountList.stream().map(Account::getAccountNumber).collect(Collectors.toSet());
 
         Random random = new Random();
+        String newAccountNumber;
 
-        while (true) {
-            long randomNumber = random.nextLong(9999999999L) + 1;
-            String newAccountNumber = String.format("%010d", randomNumber);
+        do {
+            long randomNumber = random.nextLong((long) (9999999999L * random.nextDouble())) + 1;
+            newAccountNumber = String.format("%010d", randomNumber);
+        } while (!accountNumberSet.add(newAccountNumber));
 
-            if (accountNumberSet.add(newAccountNumber)) {
-                return newAccountNumber;
-            }
-        }
+        return newAccountNumber;
     }
 
     private void validateCreateAccount(AccountUser accountUser) {
@@ -103,6 +98,14 @@ public class AccountService {
     private AccountUser getAccountUser(Long userId) {
         return accountUserRepository.findById(userId)
                 .orElseThrow(() -> new AccountException(USER_NOT_FOUND));
+    }
+
+    public List<AccountDto> getAccountListByUserId(Long userId) {
+        AccountUser accountUser = getAccountUser(userId);
+
+        List<Account> accountList = accountRepository.findByAccountUser(accountUser);
+
+        return accountList.stream().map(AccountDto::fromEntity).collect(Collectors.toList());
     }
 
 

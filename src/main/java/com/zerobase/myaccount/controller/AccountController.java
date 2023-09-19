@@ -1,16 +1,13 @@
 package com.zerobase.myaccount.controller;
 
-import com.zerobase.myaccount.dto.CreateAccountRequest;
-import com.zerobase.myaccount.dto.CreateAccountResponse;
-import com.zerobase.myaccount.dto.DeleteAccountRequest;
-import com.zerobase.myaccount.dto.DeleteAccountResponse;
+import com.zerobase.myaccount.dto.*;
 import com.zerobase.myaccount.service.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,9 +23,20 @@ public class AccountController {
     }
 
     @DeleteMapping("/account")
-    public DeleteAccountResponse deleteAccount(@Valid @RequestBody DeleteAccountRequest request){
+    public DeleteAccountResponse deleteAccount(@Valid @RequestBody DeleteAccountRequest request) {
         return DeleteAccountResponse.from(
                 accountService.deleteAccount(request.getUserId(), request.getAccountNumber())
         );
+    }
+
+    @GetMapping("/account")
+    public List<AccountInfo> getAccountListByUserId(@RequestParam("user_id") Long userId) {
+        return accountService.getAccountListByUserId(userId).stream()
+                .map(
+                        accountDto -> AccountInfo.builder()
+                                .accountNumber(accountDto.getAccountNumber())
+                                .balance(accountDto.getBalance())
+                                .build()
+                ).collect(Collectors.toList());
     }
 }

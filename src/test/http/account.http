@@ -3,7 +3,7 @@ POST http://localhost:8080/account
 Content-Type: application/json
 
 {
-    "userId": 2,
+    "userId": 1,
     "initBalance": 1000
 }
 
@@ -13,5 +13,8 @@ Content-Type: application/json
 
 {
     "userId": 1,
-    "accountNumber": "1000000000"
+    "accountNumber": "0438347445"
 }
+
+### get accountList
+GET http://localhost:8080/account?user_id=1

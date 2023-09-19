@@ -15,6 +15,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static com.zerobase.myaccount.type.AccountStatus.IN_USE;
@@ -223,5 +225,55 @@ class AccountServiceTest {
 
         // then
         assertEquals(BALANCE_NOT_EMPTY, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("계좌 목록 조회 - 성공")
+    void getAccountListByUserId_Success() throws Exception {
+        // given
+        given(accountUserRepository.findById(anyLong()))
+                .willReturn(Optional.of(getAccountUser()));
+
+        List<Account> accountList = Arrays.asList(Account.builder()
+                .accountUser(getAccountUser())
+                .accountNumber("1000000000")
+                .balance(1000L)
+                .build(), Account.builder()
+                .accountUser(getAccountUser())
+                .accountNumber("2000000000")
+                .balance(2000L)
+                .build(), Account.builder()
+                .accountUser(getAccountUser())
+                .accountNumber("3000000000")
+                .balance(3000L)
+                .build());
+
+        given(accountRepository.findByAccountUser(any()))
+                .willReturn(accountList);
+
+        // when
+        List<AccountDto> accountDtos = accountService.getAccountListByUserId(12L);
+
+        // then
+        assertEquals(3, accountDtos.size());
+        assertEquals("1000000000", accountDtos.get(0).getAccountNumber());
+        assertEquals(1000, accountDtos.get(0).getBalance());
+        assertEquals("2000000000", accountDtos.get(1).getAccountNumber());
+        assertEquals(2000, accountDtos.get(1).getBalance());
+        assertEquals("3000000000", accountDtos.get(2).getAccountNumber());
+        assertEquals(3000, accountDtos.get(2).getBalance());
+    }
+    @Test
+    @DisplayName("계좌 목록 조회 실패 - 사용자 없음")
+    void getAccountListByUserId_UserNotFound() throws Exception {
+        // given
+        given(accountUserRepository.findById(anyLong()))
+                .willReturn(Optional.empty());
+
+        // when
+        AccountException exception = assertThrows(AccountException.class, () -> accountService.getAccountListByUserId(1L));
+
+        // then
+        assertEquals(USER_NOT_FOUND, exception.getErrorCode());
     }
 }
