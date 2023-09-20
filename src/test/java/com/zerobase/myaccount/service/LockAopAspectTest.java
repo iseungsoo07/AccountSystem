@@ -2,7 +2,6 @@ package com.zerobase.myaccount.service;
 
 import com.zerobase.myaccount.dto.UseBalanceRequest;
 import com.zerobase.myaccount.exception.AccountException;
-import com.zerobase.myaccount.type.ErrorCode;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,7 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.zerobase.myaccount.type.ErrorCode.*;
+import static com.zerobase.myaccount.type.ErrorCode.ACCOUNT_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;

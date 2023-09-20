@@ -38,7 +38,7 @@ public class TransactionController {
             return CancelBalanceResponse.from(
                     transactionService.cancelBalance(request.getTransactionId(), request.getAccountNumber(), request.getAmount())
             );
-        } catch(AccountException e) {
+        } catch (AccountException e) {
             log.error("잔액 사용 취소 실패");
 
             transactionService.saveFailedCancelTransaction(request.getAccountNumber(), request.getAmount());

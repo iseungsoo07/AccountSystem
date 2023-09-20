@@ -1,6 +1,7 @@
 package com.zerobase.myaccount.service;
 
 import com.zerobase.myaccount.exception.AccountException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,6 +28,7 @@ class LockServiceTest {
     private LockService lockService;
 
     @Test
+    @DisplayName("락 획득 성공")
     void successsGetLock() throws InterruptedException {
         // given
         given(redissonClient.getLock(anyString()))
@@ -41,6 +43,7 @@ class LockServiceTest {
     }
 
     @Test
+    @DisplayName("락 획득 실패")
     void failGetLock() throws InterruptedException {
         // given
         given(redissonClient.getLock(anyString()))

@@ -5,11 +5,9 @@ import com.zerobase.myaccount.type.AccountStatus;
 import com.zerobase.myaccount.type.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -18,13 +16,8 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@EntityListeners(AuditingEntityListener.class)
-public class Account {
-    @Id
-    @GeneratedValue
-    private Long id;
-
+@SuperBuilder
+public class Account extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private AccountUser accountUser;
 
@@ -38,12 +31,6 @@ public class Account {
     private LocalDateTime registeredAt;
 
     private LocalDateTime unRegisteredAt;
-
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
 
     public void deleteAccount(AccountStatus accountStatus, LocalDateTime unRegisteredAt) {
         this.accountStatus = accountStatus;
