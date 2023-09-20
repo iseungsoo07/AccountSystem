@@ -42,7 +42,7 @@ class AccountServiceTest {
 
     @Test
     @DisplayName("계좌 생성 정상 동작")
-    void successCreateAccount() throws Exception {
+    void successCreateAccount() {
         // given
         AccountUser user = getAccountUser();
 
@@ -77,10 +77,10 @@ class AccountServiceTest {
 
     @Test
     @DisplayName("해당 사용자 없음 - 계좌 생성 실패")
-    void failCreateAccount_UserNotFound() throws Exception {
+    void failCreateAccount_UserNotFound() {
         // given
         given(accountUserRepository.findById(anyLong()))
-                .willReturn((Optional.of(getAccountUser())));
+                .willReturn((Optional.empty()));
 
         // when
         AccountException exception = assertThrows(AccountException.class, () -> accountService.createAccount(1L, 2000L));
@@ -91,7 +91,7 @@ class AccountServiceTest {
 
     @Test
     @DisplayName("1명의 사용자가 10개의 계좌를 보유 중 일때 - 계좌 생성 실패")
-    void failCreateAccount_Over10Accounts() throws Exception {
+    void failCreateAccount_Over10Accounts() {
         // given
         given(accountUserRepository.findById(anyLong()))
                 .willReturn((Optional.of(getAccountUser())));
@@ -108,7 +108,7 @@ class AccountServiceTest {
 
     @Test
     @DisplayName("계좌 해지 정상 동작")
-    void successDeleteAccount() throws Exception {
+    void successDeleteAccount() {
         // given
         given(accountUserRepository.findById(anyLong()))
                 .willReturn((Optional.of(getAccountUser())));
@@ -134,7 +134,7 @@ class AccountServiceTest {
 
     @Test
     @DisplayName("사용자 없음 - 계좌 해지 실패")
-    void failDeleteAccount_UserNotFound() throws Exception {
+    void failDeleteAccount_UserNotFound() {
         // given
         given(accountUserRepository.findById(anyLong()))
                 .willReturn((Optional.empty()));
@@ -148,7 +148,7 @@ class AccountServiceTest {
 
     @Test
     @DisplayName("계좌 없음 - 계좌 해지 실패")
-    void failDeleteAccount_AccountNotFound() throws Exception {
+    void failDeleteAccount_AccountNotFound() {
         // given
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.of(getAccountUser()));
@@ -165,7 +165,7 @@ class AccountServiceTest {
 
     @Test
     @DisplayName("사용자 아이디와 계좌 소유주가 다름 - 계좌 해지 실패")
-    void failDeleteAccount_AccountUserUnmatch() throws Exception {
+    void failDeleteAccount_AccountUserUnmatch() {
         // given
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.of(getAccountUser()));
@@ -187,7 +187,7 @@ class AccountServiceTest {
 
     @Test
     @DisplayName("사용자 계좌가 이미 해지된 상태 - 계좌 해지 실패")
-    void failDeleteAccount_AccountStatusAlreadyUnregistered() throws Exception {
+    void failDeleteAccount_AccountStatusAlreadyUnregistered() {
         // given
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.of(getAccountUser()));
@@ -208,7 +208,7 @@ class AccountServiceTest {
 
     @Test
     @DisplayName("계좌에 잔액이 존재하는 경우 - 계좌 해지 실패")
-    void failDeleteAccount_AccountBalanceIsNotEmpty() throws Exception {
+    void failDeleteAccount_AccountBalanceIsNotEmpty() {
         // given
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.of(getAccountUser()));
@@ -229,7 +229,7 @@ class AccountServiceTest {
 
     @Test
     @DisplayName("계좌 목록 조회 - 성공")
-    void successGetAccountListByUserId() throws Exception {
+    void successGetAccountListByUserId() {
         // given
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.of(getAccountUser()));
@@ -265,7 +265,7 @@ class AccountServiceTest {
     }
     @Test
     @DisplayName("계좌 목록 조회 실패 - 사용자 없음")
-    void failGetAccountListByUserId_UserNotFound() throws Exception {
+    void failGetAccountListByUserId_UserNotFound() {
         // given
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.empty());

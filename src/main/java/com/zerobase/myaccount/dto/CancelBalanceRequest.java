@@ -8,13 +8,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UseBalanceRequest implements AccountLockIdInterface {
-    @NotNull
-    @Min(1)
-    private Long userId;
+@Builder
+public class CancelBalanceRequest implements AccountLockIdInterface {
+    @NotBlank
+    private String transactionId;
 
     @NotBlank
     @Size(min = 10, max = 10)

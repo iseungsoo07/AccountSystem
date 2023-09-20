@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
     "userId": 1,
-    "initBalance": 1000
+    "initBalance": 1000000
 }
 
 ### delete account
@@ -13,8 +13,8 @@ Content-Type: application/json
 
 {
     "userId": 1,
-    "accountNumber": "0438347445"
+    "accountNumber": "0158446948"
 }
 
 ### get accountList
-GET http://localhost:8080/account?user_id=1
+GET http://localhost:8080/account?user_id=4

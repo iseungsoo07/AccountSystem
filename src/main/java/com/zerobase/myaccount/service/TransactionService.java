@@ -20,7 +20,9 @@ import java.util.UUID;
 
 import static com.zerobase.myaccount.type.AccountStatus.UNREGISTERED;
 import static com.zerobase.myaccount.type.ErrorCode.*;
+import static com.zerobase.myaccount.type.TransactionResultType.F;
 import static com.zerobase.myaccount.type.TransactionResultType.S;
+import static com.zerobase.myaccount.type.TransactionType.CANCEL;
 import static com.zerobase.myaccount.type.TransactionType.USE;
 
 @Service
@@ -43,6 +45,13 @@ public class TransactionService {
         account.useBalance(amount);
 
         return TransactionDto.fromEntity(saveAndGetTransaction(amount, account, USE, S));
+    }
+
+    public void saveFailedUseTransaction(String accountNumber, Long amount) {
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
+
+        saveAndGetTransaction(amount, account, USE, F);
     }
 
     private Transaction saveAndGetTransaction(Long amount, Account account, TransactionType transactionType, TransactionResultType transactionResultType) {
@@ -69,5 +78,46 @@ public class TransactionService {
         if (amount > account.getBalance()) {
             throw new AccountException(AMOUNT_EXCEED_BALANCE);
         }
+    }
+
+    public TransactionDto cancelBalance(String transactionId, String accountNumber, Long amount) {
+        Transaction transaction = transactionRepository.findByTransactionId(transactionId)
+                .orElseThrow(() -> new AccountException(TRANSACTION_NOT_FOUND));
+
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
+
+        validateCancelBalance(transaction, account, amount);
+
+        account.cancelBalance(amount);
+
+        return TransactionDto.fromEntity(saveAndGetTransaction(amount, account, CANCEL, S));
+    }
+
+    public void saveFailedCancelTransaction(String accountNumber, Long amount) {
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
+
+        saveAndGetTransaction(amount, account, CANCEL, F);
+    }
+
+    private void validateCancelBalance(Transaction transaction, Account account, Long amount) {
+        if (!Objects.equals(transaction.getAccount().getId(), account.getId())) {
+            throw new AccountException(TRANSACTION_ACCOUNT_UNMATCH);
+        }
+
+        if (!Objects.equals(amount, transaction.getAmount())) {
+            throw new AccountException(CANCEL_MUST_FULLY);
+        }
+
+        if (transaction.getTransactedAt().isBefore(LocalDateTime.now().minusYears(1))) {
+            throw new AccountException(TOO_OLD_ORDER_TO_CANCEL);
+        }
+    }
+
+
+    public TransactionDto getTransaction(String transactionId) {
+        return TransactionDto.fromEntity(transactionRepository.findByTransactionId(transactionId)
+                .orElseThrow(() -> new AccountException(TRANSACTION_NOT_FOUND)));
     }
 }
