@@ -32,13 +32,13 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class AccountServiceTest {
     @Mock
-    private AccountRepository accountRepository;
+    AccountRepository accountRepository;
 
     @Mock
-    private AccountUserRepository accountUserRepository;
+    AccountUserRepository accountUserRepository;
 
     @InjectMocks
-    private AccountService accountService;
+    AccountService accountService;
 
     @Test
     @DisplayName("계좌 생성 정상 동작")

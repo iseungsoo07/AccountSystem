@@ -20,13 +20,13 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class LockAopAspectTest {
     @Mock
-    private LockService lockService;
+    LockService lockService;
 
     @Mock
-    private ProceedingJoinPoint proceedingJoinPoint;
+    ProceedingJoinPoint proceedingJoinPoint;
 
     @InjectMocks
-    private LockAopAspect lockAopAspect;
+    LockAopAspect lockAopAspect;
 
     @Test
     void lockAndUnlock() throws Throwable {

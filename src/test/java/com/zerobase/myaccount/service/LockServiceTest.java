@@ -19,13 +19,13 @@ import static org.mockito.BDDMockito.given;
 class LockServiceTest {
 
     @Mock
-    private RedissonClient redissonClient;
+    RedissonClient redissonClient;
 
     @Mock
-    private RLock rLock;
+    RLock rLock;
 
     @InjectMocks
-    private LockService lockService;
+    LockService lockService;
 
     @Test
     @DisplayName("락 획득 성공")

@@ -37,16 +37,16 @@ import static org.mockito.Mockito.verify;
 class TransactionServiceTest {
 
     @Mock
-    private TransactionRepository transactionRepository;
+    TransactionRepository transactionRepository;
 
     @Mock
-    private AccountUserRepository accountUserRepository;
+    AccountUserRepository accountUserRepository;
 
     @Mock
-    private AccountRepository accountRepository;
+    AccountRepository accountRepository;
 
     @InjectMocks
-    private TransactionService transactionService;
+    TransactionService transactionService;
 
     @Test
     @DisplayName("잔액 사용 - 성공")
