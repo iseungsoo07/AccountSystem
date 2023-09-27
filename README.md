@@ -1,9 +1,10 @@
 # SpringBoot와 Java를 활용한 Account(계좌 관리) 시스템
 ## 개발 환경
-- Spring Boot: 2.7.16
+- Spring Boot: 3.1.3
 - Java: 11
 - IDEA: IntelliJ
-- Database: MySQL
+- Database: H2 인메모리 DB
+- redis
 
 ---
 
