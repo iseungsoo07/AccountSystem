@@ -1,4 +1,11 @@
 # SpringBoot와 Java를 활용한 Account(계좌 관리) 시스템
+## 개발 환경
+- Spring Boot: 2.7.16
+- Java: 11
+- IDEA: IntelliJ
+- Database: MySQL
+
+---
 
 **1. 공통 요구 사항**
 - SpringBoot와 Java를 활용
